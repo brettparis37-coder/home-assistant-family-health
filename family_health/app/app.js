@@ -86,10 +86,10 @@ function renderGrowthChart(container,rows,key,divisor,unit){
   const xmin=Math.min(0,...points.map(x=>x.day)),xmax=Math.max(xmin+1,...points.map(x=>x.day));let ymin=Math.min(...points.map(x=>x.v)),ymax=Math.max(...points.map(x=>x.v));const pad=Math.max((ymax-ymin)*.15,ymax*.02,.1);ymin=Math.max(0,ymin-pad);ymax+=pad;
   const px=x=>l+(x.day-xmin)/(xmax-xmin)*inner,py=x=>t+(ymax-x.v)/(ymax-ymin)*high;
   let marks="";for(let j=0;j<=3;j++){const y=t+high*j/3;marks+=`<line class="grid" x1="${l}" y1="${y}" x2="${w-r}" y2="${y}"/><text x="${l-7}" y="${y+3}" text-anchor="end">${number(ymax-(ymax-ymin)*j/3,1)}</text>`}
-  const coords=points.map(x=>`${px(x)},${py(x)}`).join(" ");marks+=`<polygon class="area" points="${l},${t+high} ${coords} ${px(points[points.length-1])},${t+high}"/><polyline class="growth-line" points="${coords}"/>`;
+  const coords=points.map(x=>`${px(x)},${py(x)}`).join(" ");if(points.length>1)marks+=`<polygon class="area" points="${px(points[0])},${t+high} ${coords} ${px(points[points.length-1])},${t+high}"/><polyline class="growth-line" points="${coords}"/>`;
   for(const p of points)marks+=`<circle class="growth-dot" cx="${px(p)}" cy="${py(p)}" r="4"><title>Day ${p.day}: ${number(p.v,2)} ${unit}</title></circle>`;
   for(let j=0;j<=4;j++){const value=xmin+(xmax-xmin)*j/4;marks+=`<text x="${l+inner*j/4}" y="${h-10}" text-anchor="middle">${number(value,0)}</text>`}
-  marks+=`<text x="${l}" y="12">${unit}</text><text x="${w-r}" y="${h-10}" text-anchor="end">days old</text>`;$(container).innerHTML=svg(marks);
+  marks+=`<text x="${l}" y="12">${unit}</text><text x="${w-r}" y="12" text-anchor="end">age in days</text>`;$(container).innerHTML=svg(marks);
 }
 function renderTables(){
   const count=$("feeding-limit").value;const rows=count==="all"?state.feedings:state.feedings.slice(0,Number(count));
