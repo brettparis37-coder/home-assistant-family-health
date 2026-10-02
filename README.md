@@ -16,8 +16,8 @@ The UI currently creates child profiles. The API and schema support adult profil
 
 ## Install
 
-1. Publish this source in a GitHub repository with `repository.yaml` at the root and `family_health/` intact. Set the URL in `repository.yaml` to that repository.
-2. In Home Assistant, open **Settings → Apps → App Store → ⋮ → Repositories** and add the repository URL.
+1. In Home Assistant, open **Settings → Apps → App Store → ⋮ → Repositories** and add `https://github.com/brettparis37-coder/home-assistant-family-health`.
+2. Wait for the repository to refresh in the App Store.
 3. Install **Family Health**, start it, then open its sidebar panel.
 4. Add a child on Home and record a feeding or measurement.
 
