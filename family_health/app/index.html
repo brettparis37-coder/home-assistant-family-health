@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f5f0">
+  <title>Family Health</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand"><span class="brand-mark">✳</span><span>family health<small>Home Assistant app</small></span></div>
+      <nav aria-label="Main navigation">
+        <button class="nav active" data-view="home"><span>⌂</span> Home</button>
+        <button class="nav" data-view="child"><span>◫</span> Person view</button>
+      </nav>
+      <div class="rail-note">A place for each person’s health story. Starting with the little ones.</div>
+    </aside>
+    <main>
+      <header class="topbar">
+        <div class="mobile-brand">✳ family health</div>
+        <div class="topbar-right">
+          <label class="top-child">Person <select id="active-child" aria-label="Active child"></select></label>
+          <span class="private-badge">Private in Home Assistant</span>
+        </div>
+      </header>
+      <div id="notice" class="notice" role="status" hidden></div>
+      <section id="home-view" class="view">
+        <div class="page-heading"><div><p class="eyebrow">HOME</p><h1>Today, at a glance.</h1><p class="subtitle">Capture a moment now. See the story take shape over time.</p></div><span id="today-label" class="date-pill"></span></div>
+        <div id="empty-state" class="empty-state" hidden><div class="empty-icon">✳</div><h2>Start with your child</h2><p>Add a child below to begin recording feedings and growth.</p></div>
+        <div id="overview" class="stats-grid"></div>
+        <div class="section-title"><div><p class="eyebrow">QUICK ENTRY</p><h2>Record a moment</h2></div></div>
+        <div class="forms-grid">
+          <section class="card form-card"><div class="card-heading"><span class="icon lilac">◉</span><div><h3>Feeding</h3><p>Breast, expressed milk, or formula</p></div></div>
+            <form id="feeding-form">
+              <label class="unit-choice">Bottle unit <select id="home-volume-unit"><option value="ml">mL</option><option value="oz">fl oz</option></select></label>
+              <input type="hidden" id="feeding-id">
+              <label>Child <select id="feeding-child" required></select></label>
+              <label>Feeding type <select id="feeding-kind"><option value="breast">Breastfeeding</option><option value="breastmilk">Breast milk (bottle)</option><option value="formula">Formula</option></select></label>
+              <div id="breast-fields" class="field-group"><div class="field-pair"><label>Start <input id="feeding-start" type="datetime-local" required></label><label>End <input id="feeding-end" type="datetime-local"></label></div><label>Side <select id="feeding-side"><option value="">Not specified</option><option value="left">Left</option><option value="right">Right</option><option value="both">Both</option></select></label><p id="duration-preview" class="field-hint"></p></div>
+              <div id="bottle-fields" class="field-group" hidden><div class="field-pair"><label>Date & time <input id="bottle-time" type="datetime-local"></label><label>Amount <span id="volume-unit-label">mL</span><input id="feeding-volume" type="number" min="0.1" step="any" inputmode="decimal"></label></div></div>
+              <label>Note <span class="optional">optional</span><textarea id="feeding-notes" rows="2" maxlength="2000" placeholder="Anything you'd like to remember"></textarea></label>
+              <div class="form-actions"><button class="primary" type="submit" id="feeding-submit">Save feeding</button><button class="quiet" type="button" id="feeding-cancel" hidden>Cancel edit</button></div>
+            </form>
+          </section>
+          <section class="card form-card"><div class="card-heading"><span class="icon peach">↗</span><div><h3>Growth</h3><p>Record weight, length, or both</p></div></div>
+            <form id="measurement-form">
+              <label class="unit-choice">Units <select id="home-growth-unit"><option value="metric">kg · cm</option><option value="imperial">lb · in</option></select></label>
+              <input type="hidden" id="measurement-id">
+              <label>Child <select id="measurement-child" required></select></label>
+              <label>Measured <input id="measurement-time" type="datetime-local" required></label>
+              <div class="field-pair"><label>Weight <span id="weight-unit-label">kg</span><input id="weight" type="number" step="any" min="0" inputmode="decimal" placeholder="Optional"></label><label>Length <span id="length-unit-label">cm</span><input id="length" type="number" step="any" min="0" inputmode="decimal" placeholder="Optional"></label></div>
+              <label>Note <span class="optional">optional</span><textarea id="measurement-notes" rows="2" maxlength="2000" placeholder="Anything you'd like to remember"></textarea></label>
+              <div class="form-actions"><button class="primary" type="submit" id="measurement-submit">Save measurement</button><button class="quiet" type="button" id="measurement-cancel" hidden>Cancel edit</button></div>
+            </form>
+          </section>
+        </div>
+        <section class="card child-card"><div class="card-heading"><span class="icon mint">＋</span><div><h3 id="child-form-title">Add a child</h3><p>Birth details stay connected to their records</p></div></div>
+          <form id="child-form"><input type="hidden" id="child-id"><div class="child-fields"><label>Name <input id="child-name" maxlength="80" required placeholder="First name or nickname"></label><label>Birth date <input id="child-birth" type="date" required></label><label>Birth time <span class="optional">optional</span><input id="child-birth-time" type="time"></label></div><label>Relationship <span class="optional">optional</span><input id="child-relationship" maxlength="80" placeholder="e.g. daughter, son"></label><label>Notes <span class="optional">optional</span><textarea id="child-notes" rows="2" maxlength="2000" placeholder="Anything useful to keep close"></textarea></label><div class="form-actions"><button class="secondary" type="submit" id="child-submit">Add child</button><button class="quiet" type="button" id="child-cancel" hidden>Cancel edit</button></div></form>
+        </section>
+      </section>
+      <section id="child-view" class="view" hidden>
+        <div class="page-heading"><div><p class="eyebrow">PERSON VIEW</p><h1 id="child-heading">A growing story.</h1><p id="child-subtitle" class="subtitle">Feedings and growth, together in one place.</p></div><button id="edit-child" class="outline" type="button">Edit profile</button></div>
+        <div id="child-empty" class="empty-state" hidden><h2>Add a child to see their timeline</h2><p>Use the Home tab to create the first profile.</p></div>
+        <div id="child-content">
+          <div class="toolbar card"><div class="control"><label for="period">Time range</label><select id="period"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option><option value="all">All time</option></select></div><div class="control"><label for="volume-unit">Volume</label><select id="volume-unit"><option value="ml">mL</option><option value="oz">fl oz</option></select></div><div class="control"><label for="growth-unit">Growth</label><select id="growth-unit"><option value="metric">kg · cm</option><option value="imperial">lb · in</option></select></div></div>
+          <div id="child-stats" class="stats-grid"></div>
+          <section class="card chart-card"><div class="chart-header"><div><p class="eyebrow">FEEDING RHYTHM</p><h2>Daily feedings</h2><p>Milk volume by type with breastfeeding time on the right scale.</p></div></div><div class="legend"><span><i class="key breastmilk"></i> Breast milk</span><span><i class="key formula"></i> Formula</span><span><i class="key breast"></i> Breastfeeding min</span></div><div id="feeding-chart" class="chart-wrap"></div></section>
+          <div class="charts-grid"><section class="card chart-card"><div class="chart-header"><div><p class="eyebrow">GROWTH</p><h2>Weight by age</h2></div></div><div id="weight-chart" class="chart-wrap small-chart"></div></section><section class="card chart-card"><div class="chart-header"><div><p class="eyebrow">GROWTH</p><h2>Length by age</h2></div></div><div id="length-chart" class="chart-wrap small-chart"></div></section></div>
+          <section class="card table-card"><div class="table-header"><div><p class="eyebrow">HISTORY</p><h2>Feeding log</h2></div><label>Show <select id="feeding-limit"><option>10</option><option>25</option><option>50</option><option value="all">All</option></select></label></div><div class="table-scroll"><table><thead><tr><th>When</th><th>Type</th><th>Amount / duration</th><th>Details</th><th class="actions">Actions</th></tr></thead><tbody id="feeding-rows"></tbody></table></div></section>
+          <section class="card table-card"><div class="table-header"><div><p class="eyebrow">HISTORY</p><h2>Growth log</h2></div></div><div class="table-scroll"><table><thead><tr><th>When</th><th>Age</th><th>Weight</th><th>Length</th><th>Note</th><th class="actions">Actions</th></tr></thead><tbody id="measurement-rows"></tbody></table></div></section>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+
